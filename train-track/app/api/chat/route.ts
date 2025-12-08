@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { gemini } from '../../src/lib/gemini';
+import { NextResponse } from "next/server";
+import { gemini } from "../../src/lib/gemini";
 
 const SYSTEM_PROMPT = `
 You are TrainTrack, an AI running coach.
@@ -19,24 +19,23 @@ export async function POST(req: Request) {
   try {
     const { message } = (await req.json()) as { message?: string };
 
-    if (!message || typeof message !== 'string') {
-      return NextResponse.json({ error: 'Missing message' }, { status: 400 });
+    if (!message || typeof message !== "string") {
+      return NextResponse.json({ error: "Missing message" }, { status: 400 });
     }
 
     const result = await (gemini as any).models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       contents: [
-        { role: 'user', parts: [{ text: SYSTEM_PROMPT }] },
-        { role: 'user', parts: [{ text: message }] }
-      ]
+        { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
+        { role: "user", parts: [{ text: message }] },
+      ],
     });
 
-    const reply =
-      (result as any)?.text ?? '[no text returned from Gemini]';
+    const reply = (result as any)?.text ?? "[no text returned from Gemini]";
 
     return NextResponse.json({ reply });
   } catch (err: any) {
-    console.error('Gemini error:', err);
+    console.error("Gemini error:", err);
     return NextResponse.json(
       { error: String(err && err.message ? err.message : err) },
       { status: 500 }
