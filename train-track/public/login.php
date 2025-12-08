@@ -4,7 +4,6 @@ require 'config.php';
 
 use Firebase\JWT\JWT;
 
-
 define('JWT_SECRET_KEY', 'eval');
 define('JWT_EXPIRE_TIME', 3600);
 
