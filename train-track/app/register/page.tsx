@@ -12,37 +12,43 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
+async function handleSubmit(e: FormEvent) {
+  e.preventDefault();
+  setError(null);
+  setSuccess(null);
 
-    if (password !== confirm) {
-      setError('Passwords do not match.');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setSuccess('Account created. Redirecting to login…');
-        setTimeout(() => router.push('/login'), 1200);
-      } else {
-        setError(data.error || 'Registration failed.');
-      }
-    } catch {
-      setError('Could not reach the registration service.');
-    } finally {
-      setLoading(false);
-    }
+  if (password !== confirm) {
+    setError('Passwords do not match.');
+    return;
   }
+
+  setLoading(true);
+  try {
+    const res = await fetch('http://localhost:8001/login.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'register',
+        email,
+        password
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      setSuccess(data.message || 'Account created. Redirecting to login…');
+      setTimeout(() => router.push('/login'), 1200);
+    } else {
+      setError(data.message || 'Registration failed.');
+    }
+  } catch {
+    setError('Could not reach the registration service.');
+  } finally {
+    setLoading(false);
+  }
+}
+
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background text-text">
