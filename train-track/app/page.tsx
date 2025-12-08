@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 
 type FitnessLevel = 'beginner' | 'intermediate' | 'advanced';
 type Goal = '5k' | '10k' | 'half' | 'marathon';
@@ -13,6 +13,22 @@ export default function HomePage() {
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState<string[]>([]);
   const [chatLoading, setChatLoading] = useState(false);
+
+  const [username, setUsername] = useState<string | null>(null);
+
+  // ✅ Load username from localStorage once on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem('tt_user');
+      if (raw) {
+        const user = JSON.parse(raw) as { fullname?: string; username?: string };
+        setUsername(user.fullname || user.username || null);
+      }
+    } catch {
+      setUsername(null);
+    }
+  }, []);
 
   function handleGeneratePlan(e: FormEvent) {
     e.preventDefault();
@@ -49,7 +65,7 @@ export default function HomePage() {
           `Coach: [error] ${data.error}`
         ]);
       }
-    } catch (err) {
+    } catch {
       setChatMessages(prev => [
         ...prev,
         `You: ${question}`,
@@ -62,7 +78,14 @@ export default function HomePage() {
 
   return (
     <div id="dashboard" className="space-y-8">
-      <section className="space-y-4">
+      <section className="space-y-2">
+        {/* ✅ New greeting line */}
+        {username && (
+          <p className="text-sm text-slate-300">
+            Hello, <span className="font-semibold">{username}</span>
+          </p>
+        )}
+
         <h1 className="text-2xl font-semibold tracking-tight">
           TrainTrack – AI-Powered Running Assistant
         </h1>
@@ -72,6 +95,7 @@ export default function HomePage() {
         </p>
       </section>
 
+      {/* rest of your component unchanged */}
       <section id="events" className="grid gap-6 md:grid-cols-[2fr,3fr]">
         <form
           onSubmit={handleGeneratePlan}
@@ -81,6 +105,7 @@ export default function HomePage() {
             Your running profile
           </h2>
           <div className="space-y-3 text-sm">
+            {/* ... existing form fields & button ... */}
             <label className="block space-y-1">
               <span className="text-slate-300">Fitness level</span>
               <select
@@ -123,6 +148,7 @@ export default function HomePage() {
           </div>
         </form>
 
+        {/* coach section unchanged */}
         <section
           id="coach"
           className="flex h-64 flex-col rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-300"
