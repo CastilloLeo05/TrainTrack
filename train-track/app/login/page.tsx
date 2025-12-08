@@ -10,30 +10,36 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+async function handleSubmit(e: FormEvent) {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
 
-    try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+  try {
+    const res = await fetch('http://localhost:8001/login.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'login',
+        email,
+        password
+      })
+    });
 
-      if (res.ok) {
-        router.push('/'); // go to dashboard
-      } else {
-        const data = await res.json();
-        setError(data.error || 'Login failed');
-      }
-    } catch {
-      setError('Could not reach the login service.');
-    } finally {
-      setLoading(false);
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      router.push('/'); // go to dashboard
+    } else {
+      setError(data.message || 'Login failed');
     }
+  } catch {
+    setError('Could not reach the login service.');
+  } finally {
+    setLoading(false);
   }
+}
+
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background text-text">
