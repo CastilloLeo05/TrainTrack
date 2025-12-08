@@ -1,3 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* your global styles below if any */
+
 @import "tailwindcss";
 
 :root {
