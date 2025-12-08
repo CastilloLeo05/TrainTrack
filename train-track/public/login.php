@@ -2,3 +2,63 @@
 
 require 'config.php';
 
+use Firebase\JWT\JWT;
+
+
+define('JWT_SECRET_KEY', 'eval');
+define('JWT_EXPIRE_TIME', 3600);
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+$data = json_decode(file_get_contents('php://input'), true) ?? [];
+$action = $data['action'] ?? '';
+
+if ($action === 'login') {
+
+    $identifier = $data['email'] ?? '';  
+    $password   = $data['password'] ?? '';
+
+    $sql = "SELECT email, username FROM Users WHERE email = '$identifier';";
+
+    $result = $conn->query($sql);
+
+    if($result && $result->num_rows > 0) {
+        $dataLogin = $result->fetch_assoc();
+
+        if(password_verify($password,$dataLogin['password'])){
+            
+            $tokenPayload=[
+                'user_id' => $dataLogin['id'],
+                'email' => $dataLogin['email'],
+                'iat' => time(),
+                'exp' => time() + JWT_EXPIRE_TIME
+            ];
+
+            $token = JWT::encode($tokenPayload, JWT_SECRET_KEY, 'HS256');
+
+            echo json_encode([ //ito yung meta data
+                    "success"=> true,
+                    "token"=> $token,
+                    "userData" => [
+                        "id" => $dataLogin['id'],
+                        "email" => $dataLogin['email'],
+                        "fullname" => $dataLogin['username'],
+                    ]]);
+                exit;
+        }else{
+            echo json_encode(["success"=> false,"error" => "Password error"]);
+            http_response_code(400);
+        }
+    }else{
+        echo json_encode(["success"=> false,"error" => "Email not found"]);
+        http_response_code(400);
+    }
+}else{
+    echo json_encode(["success" => false, "message" => "Invalid action"]);
+    http_response_code(400);
+}
+
+$conn->close();
