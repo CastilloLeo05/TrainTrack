@@ -29,7 +29,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // ✅ store token and userData from PHP into localStorage
+        // store token and userData from PHP into localStorage
         if (typeof window !== 'undefined') {
           if (data.token) {
             localStorage.setItem('tt_token', data.token);
