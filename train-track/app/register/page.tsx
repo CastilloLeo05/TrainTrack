@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -24,11 +25,12 @@ async function handleSubmit(e: FormEvent) {
 
   setLoading(true);
   try {
-    const res = await fetch('http://localhost:8001/login.php', {
+    const res = await fetch('http://localhost:8001/register.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        action: 'register',
+        action: 'register',   // optional, if your PHP uses it
+        username,
         email,
         password
       })
@@ -61,6 +63,20 @@ async function handleSubmit(e: FormEvent) {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-sm">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-text/80">
+              Username
+            </label>
+            <input
+              type="text"
+              required
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary/60"
+              placeholder="yourusername"
+            />
+          </div>
+
           <div className="space-y-1">
             <label className="text-xs font-medium text-text/80">Email</label>
             <input
