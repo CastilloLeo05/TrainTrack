@@ -10,36 +10,45 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-async function handleSubmit(e: FormEvent) {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-  try {
-    const res = await fetch('http://localhost:8001/login.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'login',
-        email,
-        password
-      })
-    });
+    try {
+      const res = await fetch('http://localhost:8001/login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'login',
+          email,
+          password
+        })
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok && data.success) {
-      router.push('/'); // go to dashboard
-    } else {
-      setError(data.message || 'Login failed');
+      if (res.ok && data.success) {
+        // ✅ store token and userData from PHP into localStorage
+        if (typeof window !== 'undefined') {
+          if (data.token) {
+            localStorage.setItem('tt_token', data.token);
+          }
+          if (data.userData) {
+            localStorage.setItem('tt_user', JSON.stringify(data.userData));
+          }
+        }
+
+        router.push('/'); // go to dashboard
+      } else {
+        setError(data.error || data.message || 'Login failed');
+      }
+    } catch {
+      setError('Could not reach the login service.');
+    } finally {
+      setLoading(false);
     }
-  } catch {
-    setError('Could not reach the login service.');
-  } finally {
-    setLoading(false);
   }
-}
-
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background text-text">
