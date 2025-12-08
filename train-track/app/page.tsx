@@ -16,7 +16,7 @@ export default function HomePage() {
 
   const [username, setUsername] = useState<string | null>(null);
 
-  // ✅ Load username from localStorage once on mount
+  // Load username from localStorage once on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
     try {
@@ -79,23 +79,16 @@ export default function HomePage() {
   return (
     <div id="dashboard" className="space-y-8">
       <section className="space-y-2">
-        {/* ✅ New greeting line */}
-        {username && (
-          <p className="text-sm text-slate-300">
-            Hello, <span className="font-semibold">{username}</span>
-          </p>
-        )}
-
         <h1 className="text-2xl font-semibold tracking-tight">
-          TrainTrack – AI-Powered Running Assistant
+          {username ? `Hello, ${username}` : 'Hello, runner'}
         </h1>
         <p className="max-w-xl text-sm text-slate-300">
-          Enter your running profile and event goal. TrainTrack will build
-          a progressive plan, predict race times, and let you chat with an AI coach.
+          TrainTrack – AI-Powered Running Assistant. Enter your running profile
+          and event goal. TrainTrack will build a progressive plan, predict race
+          times, and let you chat with an AI coach.
         </p>
       </section>
 
-      {/* rest of your component unchanged */}
       <section id="events" className="grid gap-6 md:grid-cols-[2fr,3fr]">
         <form
           onSubmit={handleGeneratePlan}
@@ -105,7 +98,6 @@ export default function HomePage() {
             Your running profile
           </h2>
           <div className="space-y-3 text-sm">
-            {/* ... existing form fields & button ... */}
             <label className="block space-y-1">
               <span className="text-slate-300">Fitness level</span>
               <select
@@ -148,7 +140,6 @@ export default function HomePage() {
           </div>
         </form>
 
-        {/* coach section unchanged */}
         <section
           id="coach"
           className="flex h-64 flex-col rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-300"
@@ -160,8 +151,8 @@ export default function HomePage() {
           <div className="flex-1 space-y-2 overflow-y-auto pr-1 text-sm">
             {chatMessages.length === 0 && (
               <p className="text-slate-400">
-                Ask anything about training. For example: “Build me an 8‑week 10K
-                plan for an intermediate runner.”
+                Ask anything about training. For example: “Build me an 8‑week
+                10K plan for an intermediate runner.”
               </p>
             )}
             {chatMessages.map((m, i) => (
