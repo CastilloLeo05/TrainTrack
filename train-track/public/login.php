@@ -21,7 +21,7 @@ if ($action === 'login') {
     $identifier = $data['email'] ?? '';  
     $password   = $data['password'] ?? '';
 
-    $sql = "SELECT email, username FROM Users WHERE email = '$identifier';";
+    $sql = "SELECT id, email, username, password FROM Users WHERE email = '$identifier';";
 
     $result = $conn->query($sql);
 
