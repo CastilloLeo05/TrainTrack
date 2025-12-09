@@ -1,22 +1,21 @@
-'use client';
+"use client";
 
-import { useState, FormEvent, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { askCoach } from '../src/api/traintrack';
-import { STORAGE_KEYS } from '../src/constants/storageKeys';
-
-type FitnessLevel = 'beginner' | 'intermediate' | 'advanced';
-type Goal = '5k' | '10k' | 'half' | 'marathon';
+import { useState, FormEvent, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { askCoach } from "./src/api/traintrack";
+import { STORAGE_KEYS } from "./src/constants/storageKeys";
+type FitnessLevel = "beginner" | "intermediate" | "advanced";
+type Goal = "5k" | "10k" | "half" | "marathon";
 
 export default function HomePage() {
   const router = useRouter();
 
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const [fitnessLevel, setFitnessLevel] = useState<FitnessLevel>('beginner');
-  const [goal, setGoal] = useState<Goal>('5k');
+  const [fitnessLevel, setFitnessLevel] = useState<FitnessLevel>("beginner");
+  const [goal, setGoal] = useState<Goal>("5k");
   const [planMessage, setPlanMessage] = useState<string | null>(null);
 
-  const [chatInput, setChatInput] = useState('');
+  const [chatInput, setChatInput] = useState("");
   const [chatMessages, setChatMessages] = useState<string[]>([]);
   const [chatLoading, setChatLoading] = useState(false);
 
@@ -24,18 +23,21 @@ export default function HomePage() {
 
   // auth guard + load username
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
     if (!token) {
-      router.replace('/login');
+      router.replace("/login");
       return;
     }
 
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.USER);
       if (raw) {
-        const user = JSON.parse(raw) as { fullname?: string; username?: string };
+        const user = JSON.parse(raw) as {
+          fullname?: string;
+          username?: string;
+        };
         setUsername(user.fullname || user.username || null);
       }
     } catch {
@@ -49,7 +51,7 @@ export default function HomePage() {
 
   async function handleGeneratePlan(e: FormEvent) {
     e.preventDefault();
-    setPlanMessage('Generating training plan…');
+    setPlanMessage("Generating training plan…");
 
     try {
       const res = await askCoach(
@@ -58,10 +60,10 @@ export default function HomePage() {
       if (res.reply) {
         setPlanMessage(res.reply);
       } else {
-        setPlanMessage(res.error || 'Could not generate plan.');
+        setPlanMessage(res.error || "Could not generate plan.");
       }
     } catch (err: any) {
-      setPlanMessage(err.message || 'Could not generate plan.');
+      setPlanMessage(err.message || "Could not generate plan.");
     }
   }
 
@@ -70,34 +72,34 @@ export default function HomePage() {
     if (!chatInput.trim() || chatLoading) return;
     const question = chatInput.trim();
 
-    setChatInput('');
+    setChatInput("");
     setChatLoading(true);
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: question })
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: question }),
       });
 
       const data = await res.json();
       if (data.reply) {
-        setChatMessages(prev => [
+        setChatMessages((prev) => [
           ...prev,
           `You: ${question}`,
-          `Coach: ${data.reply}`
+          `Coach: ${data.reply}`,
         ]);
       } else if (data.error) {
-        setChatMessages(prev => [
+        setChatMessages((prev) => [
           ...prev,
           `You: ${question}`,
-          `Coach: [error] ${data.error}`
+          `Coach: [error] ${data.error}`,
         ]);
       }
     } catch {
-      setChatMessages(prev => [
+      setChatMessages((prev) => [
         ...prev,
         `You: ${question}`,
-        'Coach: [error] Could not reach the AI coach.'
+        "Coach: [error] Could not reach the AI coach.",
       ]);
     } finally {
       setChatLoading(false);
@@ -108,7 +110,7 @@ export default function HomePage() {
     <div id="dashboard" className="space-y-8">
       <section className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight">
-          {username ? `Hello, ${username}` : 'Hello, runner'}
+          {username ? `Hello, ${username}` : "Hello, runner"}
         </h1>
         <p className="max-w-xl text-sm text-slate-300">
           TrainTrack – AI-Powered Running Assistant. Enter your running profile
@@ -130,7 +132,7 @@ export default function HomePage() {
               <span className="text-slate-300">Fitness level</span>
               <select
                 value={fitnessLevel}
-                onChange={e =>
+                onChange={(e) =>
                   setFitnessLevel(e.target.value as FitnessLevel)
                 }
                 className="w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-sm text-slate-100"
@@ -145,7 +147,7 @@ export default function HomePage() {
               <span className="text-slate-300">Goal event</span>
               <select
                 value={goal}
-                onChange={e => setGoal(e.target.value as Goal)}
+                onChange={(e) => setGoal(e.target.value as Goal)}
                 className="w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-sm text-slate-100"
               >
                 <option value="5k">5K</option>
@@ -201,7 +203,7 @@ export default function HomePage() {
           <form className="mt-3 flex gap-2" onSubmit={handleChatSubmit}>
             <input
               value={chatInput}
-              onChange={e => setChatInput(e.target.value)}
+              onChange={(e) => setChatInput(e.target.value)}
               className="flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-100 placeholder:text-slate-500 sm:text-sm"
               placeholder="Ask the coach about your training…"
             />
