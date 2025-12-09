@@ -1,3 +1,4 @@
+// tailwind.config.ts
 const config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",

@@ -21,7 +21,6 @@ export default function LoginPage() {
       const data = await loginUser(email, password);
 
       if (data.success) {
-        // store token and user data
         if (typeof window !== "undefined") {
           if (data.token) {
             localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
@@ -33,8 +32,7 @@ export default function LoginPage() {
             );
           }
         }
-
-        router.push("/"); // go to dashboard
+        router.push("/");
       } else {
         setError(data.error || data.message || "Login failed");
       }
@@ -46,8 +44,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background text-text">
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/30 p-6 backdrop-blur-md">
+    <main className="flex min-h-[calc(100vh-56px)] items-center justify-center">
+      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/40 p-6 shadow-md backdrop-blur-md">
         <h1 className="mb-1 text-xl font-extrabold tracking-tight">
           TrainTrack
         </h1>
@@ -63,7 +61,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary/60"
+              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary"
               placeholder="you@example.com"
             />
           </div>
@@ -75,7 +73,7 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary/60"
+              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary"
               placeholder="••••••••"
             />
           </div>
@@ -85,7 +83,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-secondary disabled:opacity-60"
+            className="mt-2 w-full rounded-md bg-primary px-3 py-2 text-sm font-medium text-white hover:bg-secondary disabled:opacity-60"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
