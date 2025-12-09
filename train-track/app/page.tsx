@@ -8,7 +8,7 @@ import { STORAGE_KEYS } from "./src/constants/storageKeys";
 type FitnessLevel = "beginner" | "intermediate" | "advanced";
 type Goal = "5k" | "10k" | "half" | "marathon";
 
-export default function HomePage() {
+export default function DashboardContent() {
   const router = useRouter();
 
   const [checkingAuth, setCheckingAuth] = useState(true);
