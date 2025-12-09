@@ -4,6 +4,7 @@ import { useState, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { askCoach } from "./src/api/traintrack";
 import { STORAGE_KEYS } from "./src/constants/storageKeys";
+
 type FitnessLevel = "beginner" | "intermediate" | "advanced";
 type Goal = "5k" | "10k" | "half" | "marathon";
 
@@ -48,6 +49,15 @@ export default function HomePage() {
   }, [router]);
 
   if (checkingAuth) return null;
+
+  // Logout
+  function handleLogout() {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(STORAGE_KEYS.TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.USER);
+    }
+    router.replace("/login");
+  }
 
   async function handleGeneratePlan(e: FormEvent) {
     e.preventDefault();
@@ -108,15 +118,24 @@ export default function HomePage() {
 
   return (
     <div id="dashboard" className="space-y-8">
-      <section className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {username ? `Hello, ${username}` : "Hello, runner"}
-        </h1>
-        <p className="max-w-xl text-sm text-slate-300">
-          TrainTrack – AI-Powered Running Assistant. Enter your running profile
-          and event goal. TrainTrack will build a progressive plan, predict race
-          times, and let you chat with an AI coach.
-        </p>
+      <section className="flex items-start justify-between gap-4">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {username ? `Hello, ${username}` : "Hello, runner"}
+          </h1>
+          <p className="max-w-xl text-sm text-slate-300">
+            TrainTrack – AI-Powered Running Assistant. Enter your running
+            profile and event goal. TrainTrack will build a progressive plan,
+            predict race times, and let you chat with an AI coach.
+          </p>
+        </div>
+
+        <button
+          onClick={handleLogout}
+          className="h-9 rounded-md border border-slate-600 px-3 text-xs font-medium text-slate-200 hover:border-red-400 hover:text-red-400"
+        >
+          Logout
+        </button>
       </section>
 
       <section id="events" className="grid gap-6 md:grid-cols-[2fr,3fr]">
