@@ -1,7 +1,10 @@
 'use client';
 
+
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { loginUser } from '../src/api/traintrack';
+import { STORAGE_KEYS } from '../src/constants/storageKeys';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,26 +19,19 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const res = await fetch('http://localhost:8001/login.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'login',
-          email,
-          password
-        })
-      });
+      const data = await loginUser(email, password);
 
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        // store token and userData from PHP into localStorage
+      if (data.success) {
+        // ensure values are in localStorage (in case you skip it in service)
         if (typeof window !== 'undefined') {
           if (data.token) {
-            localStorage.setItem('tt_token', data.token);
+            localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
           }
           if (data.userData) {
-            localStorage.setItem('tt_user', JSON.stringify(data.userData));
+            localStorage.setItem(
+              STORAGE_KEYS.USER,
+              JSON.stringify(data.userData)
+            );
           }
         }
 
@@ -43,8 +39,8 @@ export default function LoginPage() {
       } else {
         setError(data.error || data.message || 'Login failed');
       }
-    } catch {
-      setError('Could not reach the login service.');
+    } catch (err: any) {
+      setError(err.message || 'Could not reach the login service.');
     } finally {
       setLoading(false);
     }
@@ -113,6 +109,3 @@ export default function LoginPage() {
     </main>
   );
 }
-
-
-//try 
