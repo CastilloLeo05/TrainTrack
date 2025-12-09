@@ -1,5 +1,3 @@
-import { hrtime } from "process";
-
 const config = {
   content: ["./app/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -7,7 +5,7 @@ const config = {
       colors: {
         primary: "#2196F3",
         secondary: "#00E5FF",
-        background: "#0A192F",
+        appBg: "#0A192F",
         text: "#F5F5F5",
       },
       fontFamily: {

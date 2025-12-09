@@ -8,9 +8,9 @@
 }
 
 body {
-  @apply bg-background text-text font-poppins;
-  background: var(--background);
-  color: var(--foreground);
+  @apply bg-appBg text-foreground font-poppins;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
