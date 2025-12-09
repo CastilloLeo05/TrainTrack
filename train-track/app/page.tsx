@@ -1,11 +1,17 @@
 'use client';
 
 import { useState, FormEvent, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { askCoach } from '../src/api/traintrack';
+import { STORAGE_KEYS } from '../src/constants/storageKeys';
 
 type FitnessLevel = 'beginner' | 'intermediate' | 'advanced';
 type Goal = '5k' | '10k' | 'half' | 'marathon';
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [fitnessLevel, setFitnessLevel] = useState<FitnessLevel>('beginner');
   const [goal, setGoal] = useState<Goal>('5k');
   const [planMessage, setPlanMessage] = useState<string | null>(null);
@@ -16,25 +22,47 @@ export default function HomePage() {
 
   const [username, setUsername] = useState<string | null>(null);
 
-  // Load username from localStorage once on mount
+  // auth guard + load username
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    if (!token) {
+      router.replace('/login');
+      return;
+    }
+
     try {
-      const raw = localStorage.getItem('tt_user');
+      const raw = localStorage.getItem(STORAGE_KEYS.USER);
       if (raw) {
         const user = JSON.parse(raw) as { fullname?: string; username?: string };
         setUsername(user.fullname || user.username || null);
       }
     } catch {
       setUsername(null);
+    } finally {
+      setCheckingAuth(false);
     }
-  }, []);
+  }, [router]);
 
-  function handleGeneratePlan(e: FormEvent) {
+  if (checkingAuth) return null;
+
+  async function handleGeneratePlan(e: FormEvent) {
     e.preventDefault();
-    setPlanMessage(
-      `Generated a placeholder plan for a ${fitnessLevel} runner targeting a ${goal}. (Next step: hook this to the real generator.)`
-    );
+    setPlanMessage('Generating training plan…');
+
+    try {
+      const res = await askCoach(
+        `Create a clear, structured training plan for a ${fitnessLevel} runner targeting a ${goal.toUpperCase()}. Use short headings and bullet points.`
+      );
+      if (res.reply) {
+        setPlanMessage(res.reply);
+      } else {
+        setPlanMessage(res.error || 'Could not generate plan.');
+      }
+    } catch (err: any) {
+      setPlanMessage(err.message || 'Could not generate plan.');
+    }
   }
 
   async function handleChatSubmit(e: FormEvent) {
@@ -135,7 +163,9 @@ export default function HomePage() {
             </button>
 
             {planMessage && (
-              <p className="mt-2 text-xs text-slate-300">{planMessage}</p>
+              <p className="mt-2 text-xs text-slate-300 whitespace-pre-wrap">
+                {planMessage}
+              </p>
             )}
           </div>
         </form>

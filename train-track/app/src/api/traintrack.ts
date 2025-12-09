@@ -1,10 +1,5 @@
 // src/api/traintrack.ts
-import { STORAGE_KEYS } from "../constants/storageKeys";
 import { postJson } from "./http";
-
-export async function askCoach(message: string) {
-  return postJson<{ reply?: string; error?: string }>("/api/chat", { message });
-}
 
 type LoginResponse = {
   success: boolean;
@@ -13,6 +8,10 @@ type LoginResponse = {
   error?: string;
   message?: string;
 };
+
+export async function askCoach(message: string) {
+  return postJson<{ reply?: string; error?: string }>("/api/chat", { message });
+}
 
 export async function loginUser(
   email: string,
@@ -38,17 +37,4 @@ export async function loginUser(
   }
 
   return data as LoginResponse;
-}
-
-// Add authentication helper function
-export function getAuthHeaders(): HeadersInit {
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem(STORAGE_KEYS.TOKEN)
-      : null;
-
-  return {
-    "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` }),
-  };
 }

@@ -25,15 +25,11 @@ export async function postJson<TResponse>(
   const data = await res.json();
 
   if (!res.ok) {
-    // Check for authentication errors
+    // Auth errors: clear and force login
     if (res.status === 401 || res.status === 403) {
-      // Clear invalid token
       if (typeof window !== "undefined") {
         localStorage.removeItem(STORAGE_KEYS.TOKEN);
         localStorage.removeItem(STORAGE_KEYS.USER);
-      }
-      // Redirect to login if on client side
-      if (typeof window !== "undefined") {
         window.location.href = "/login";
       }
     }
