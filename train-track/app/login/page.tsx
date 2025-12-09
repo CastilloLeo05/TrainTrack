@@ -44,57 +44,58 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-[calc(100vh-56px)] items-center justify-center">
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/40 p-6 shadow-md backdrop-blur-md">
-        <h1 className="mb-1 text-xl font-extrabold tracking-tight">
+    <main className="flex min-h-screen items-center justify-center bg-[#07101d] px-4">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 shadow-xl backdrop-blur-md">
+        <h1 className="mb-2 text-center text-2xl font-bold text-white">
           TrainTrack
         </h1>
-        <p className="mb-6 text-xs text-text/70">
+        <p className="mb-6 text-center text-sm text-white/60">
           Sign in to access your training dashboard.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-sm">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Email */}
           <div className="space-y-1">
-            <label className="text-xs font-medium text-text/80">Email</label>
+            <label className="text-xs font-medium text-white/80">Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="you@example.com"
             />
           </div>
 
+          {/* Password */}
           <div className="space-y-1">
-            <label className="text-xs font-medium text-text/80">Password</label>
+            <label className="text-xs font-medium text-white/80">Password</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="••••••••"
             />
           </div>
 
+          {/* Error */}
           {error && <p className="text-xs text-red-400">{error}</p>}
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full rounded-md bg-primary px-3 py-2 text-sm font-medium text-white hover:bg-secondary disabled:opacity-60"
+            className="mt-2 w-full rounded-md bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-xs text-text/70">
+        <p className="mt-5 text-center text-xs text-white/60">
           New here?{" "}
-          <a
-            href="/register"
-            className="font-medium text-secondary hover:underline"
-          >
+          <a href="/register" className="font-medium text-blue-400 hover:underline">
             Create an account
           </a>
         </p>
