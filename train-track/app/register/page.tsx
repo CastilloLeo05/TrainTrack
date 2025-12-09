@@ -25,16 +25,21 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const res = await fetch("https://star-panda-literally.ngrok-free.app/register.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "register",
-          username,
-          email,
-          password,
-        }),
-      });
+      const res = await fetch(
+        "https://star-panda-literally.ngrok-free.app/register.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "register",
+            username,
+            email,
+            password,
+          }),
+        }
+      );
+
+      console.log(username);
 
       const data = await res.json();
 
@@ -63,9 +68,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4 text-sm">
           <div className="space-y-1">
-            <label className="text-xs font-medium text-text/80">
-              Username
-            </label>
+            <label className="text-xs font-medium text-text/80">Username</label>
             <input
               type="text"
               required
@@ -89,9 +92,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-text/80">
-              Password
-            </label>
+            <label className="text-xs font-medium text-text/80">Password</label>
             <input
               type="password"
               required

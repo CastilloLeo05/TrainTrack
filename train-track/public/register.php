@@ -14,7 +14,7 @@ $action = $data['action'] ?? '';
 if ($action === 'register') {
 
     $identifier = $data['email'] ?? $data['em'] ?? '';
-    $username = $data9['username'] ?? $data['user'] ?? '';
+    $username = $data['username'] ?? $data['user'] ?? '';
     $password = $data['password'] ?? $data['pass'] ?? '';
 
     $sql = "SELECT * FROM Users WHERE Email = '$identifier';"; //check if email exist
@@ -29,7 +29,7 @@ if ($action === 'register') {
 
         if($conn->query($sql) === true) {
 
-            echo json_encode(["success" => true]);
+            echo json_encode(["success" => true, $sql, $username]);
             
         }else{
             echo json_encode(["success" => false,"error" => "Error: " . $conn->error]);
