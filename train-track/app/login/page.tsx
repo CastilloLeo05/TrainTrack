@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-
-import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { loginUser } from '../src/api/traintrack';
-import { STORAGE_KEYS } from '../src/constants/storageKeys';
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { loginUser } from "../src/api/traintrack";
+import { STORAGE_KEYS } from "../src/constants/storageKeys";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +22,7 @@ export default function LoginPage() {
 
       if (data.success) {
         // ensure values are in localStorage (in case you skip it in service)
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           if (data.token) {
             localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
           }
@@ -35,12 +34,12 @@ export default function LoginPage() {
           }
         }
 
-        router.push('/'); // go to dashboard
+        router.push("/"); // go to dashboard
       } else {
-        setError(data.error || data.message || 'Login failed');
+        setError(data.error || data.message || "Login failed");
       }
     } catch (err: any) {
-      setError(err.message || 'Could not reach the login service.');
+      setError(err.message || "Could not reach the login service.");
     } finally {
       setLoading(false);
     }
@@ -63,7 +62,7 @@ export default function LoginPage() {
               type="email"
               required
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary/60"
               placeholder="you@example.com"
             />
@@ -75,29 +74,25 @@ export default function LoginPage() {
               type="password"
               required
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary/60"
               placeholder="••••••••"
             />
           </div>
 
-          {error && (
-            <p className="text-xs text-red-400">
-              {error}
-            </p>
-          )}
+          {error && <p className="text-xs text-red-400">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
             className="mt-2 w-full rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-secondary disabled:opacity-60"
           >
-            {loading ? 'Signing in…' : 'Sign in'}
+            {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
 
         <p className="mt-4 text-center text-xs text-text/70">
-          New here?{' '}
+          New here?{" "}
           <a
             href="/register"
             className="font-medium text-secondary hover:underline"
