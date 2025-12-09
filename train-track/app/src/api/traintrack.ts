@@ -17,7 +17,7 @@ export async function loginUser(
   email: string,
   password: string
 ): Promise<LoginResponse> {
-  const res = await fetch("http://localhost:8001/login.php", {
+  const res = await fetch("https://star-panda-literally.ngrok-free.app/login.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

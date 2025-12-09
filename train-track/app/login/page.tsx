@@ -21,7 +21,7 @@ export default function LoginPage() {
       const data = await loginUser(email, password);
 
       if (data.success) {
-        // ensure values are in localStorage (in case you skip it in service)
+        // store token and user data
         if (typeof window !== "undefined") {
           if (data.token) {
             localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
