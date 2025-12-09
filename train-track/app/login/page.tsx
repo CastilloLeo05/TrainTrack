@@ -1,3 +1,4 @@
+// app/login/page.tsx
 "use client";
 
 import { FormEvent, useState } from "react";
@@ -44,17 +45,19 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#07101d] px-4">
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8 shadow-xl backdrop-blur-md">
-        <h1 className="mb-2 text-center text-2xl font-bold text-white">
-          TrainTrack
-        </h1>
-        <p className="mb-6 text-center text-sm text-white/60">
-          Sign in to access your training dashboard.
-        </p>
+    <main className="flex min-h-screen items-center justify-center px-4">
+      <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/10 bg-white/5 p-8 shadow-xl backdrop-blur-md">
+        <header className="space-y-1 text-center">
+          <p className="text-xs uppercase tracking-[0.2em] text-blue-400">
+            TrainTrack
+          </p>
+          <h1 className="text-2xl font-semibold">Welcome back</h1>
+          <p className="text-xs text-white/60">
+            Sign in to access your training dashboard.
+          </p>
+        </header>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email */}
+        <form onSubmit={handleSubmit} className="space-y-4 text-sm">
           <div className="space-y-1">
             <label className="text-xs font-medium text-white/80">Email</label>
             <input
@@ -62,40 +65,46 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60"
               placeholder="you@example.com"
             />
           </div>
 
-          {/* Password */}
           <div className="space-y-1">
-            <label className="text-xs font-medium text-white/80">Password</label>
+            <label className="text-xs font-medium text-white/80">
+              Password
+            </label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60"
               placeholder="••••••••"
             />
           </div>
 
-          {/* Error */}
-          {error && <p className="text-xs text-red-400">{error}</p>}
+          {error && (
+            <p className="text-xs text-red-400" role="alert">
+              {error}
+            </p>
+          )}
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full rounded-md bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+            className="mt-2 w-full rounded-lg bg-blue-500 py-2 text-sm font-medium text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
 
-        <p className="mt-5 text-center text-xs text-white/60">
+        <p className="pt-2 text-center text-xs text-white/60">
           New here?{" "}
-          <a href="/register" className="font-medium text-blue-400 hover:underline">
+          <a
+            href="/register"
+            className="font-medium text-blue-400 hover:text-blue-300"
+          >
             Create an account
           </a>
         </p>

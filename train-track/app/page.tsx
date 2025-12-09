@@ -1,3 +1,4 @@
+// app/page.tsx
 "use client";
 
 import { useState, FormEvent, useEffect } from "react";
@@ -8,9 +9,8 @@ import { STORAGE_KEYS } from "./src/constants/storageKeys";
 type FitnessLevel = "beginner" | "intermediate" | "advanced";
 type Goal = "5k" | "10k" | "half" | "marathon";
 
-export default function DashboardContent() {
+export default function DashboardPage() {
   const router = useRouter();
-
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [fitnessLevel, setFitnessLevel] = useState<FitnessLevel>("beginner");
   const [goal, setGoal] = useState<Goal>("5k");
@@ -22,7 +22,6 @@ export default function DashboardContent() {
 
   const [username, setUsername] = useState<string | null>(null);
 
-  // auth guard + load username
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -50,7 +49,6 @@ export default function DashboardContent() {
 
   if (checkingAuth) return null;
 
-  // Logout
   function handleLogout() {
     if (typeof window !== "undefined") {
       localStorage.removeItem(STORAGE_KEYS.TOKEN);
@@ -117,44 +115,49 @@ export default function DashboardContent() {
   }
 
   return (
-    <div id="dashboard" className="space-y-8">
-      <section className="flex items-start justify-between gap-4">
+    <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-6 px-4 py-6 md:py-10">
+      <section className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {username ? `Hello, ${username}` : "Hello, runner"}
+          <p className="text-xs uppercase tracking-[0.2em] text-blue-400">
+            Dashboard
+          </p>
+          <h1 className="text-2xl font-semibold">
+            {username ? `Welcome back, ${username}` : "Welcome back"}
           </h1>
-          <p className="max-w-xl text-sm text-slate-300">
-            TrainTrack – AI-Powered Running Assistant. Enter your running
-            profile and event goal. TrainTrack will build a progressive plan,
-            predict race times, and let you chat with an AI coach.
+          <p className="max-w-xl text-sm text-white/70">
+            TrainTrack builds progressive running plans and lets you chat with
+            an AI coach about training, pacing, and race strategy.
           </p>
         </div>
 
         <button
           onClick={handleLogout}
-          className="h-9 rounded-md border border-slate-600 px-3 text-xs font-medium text-slate-200 hover:border-red-400 hover:text-red-400"
+          className="h-9 rounded-full border border-white/20 px-4 text-xs font-medium text-white/80 transition hover:border-red-400 hover:text-red-300"
         >
           Logout
         </button>
       </section>
 
-      <section id="events" className="grid gap-6 md:grid-cols-[2fr,3fr]">
+      <section className="grid gap-6 md:grid-cols-[1.2fr,1.8fr]">
         <form
           onSubmit={handleGeneratePlan}
-          className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4"
+          className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-5 text-sm shadow-lg backdrop-blur-md"
         >
-          <h2 className="text-sm font-semibold text-slate-100">
-            Your running profile
-          </h2>
-          <div className="space-y-3 text-sm">
+          <h2 className="text-sm font-semibold text-white">Training profile</h2>
+          <p className="text-xs text-white/60">
+            Choose your current level and goal distance to get a structured
+            plan.
+          </p>
+
+          <div className="space-y-3">
             <label className="block space-y-1">
-              <span className="text-slate-300">Fitness level</span>
+              <span className="text-xs text-white/80">Fitness level</span>
               <select
                 value={fitnessLevel}
                 onChange={(e) =>
                   setFitnessLevel(e.target.value as FitnessLevel)
                 }
-                className="w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-sm text-slate-100"
+                className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60"
               >
                 <option value="beginner">Beginner</option>
                 <option value="intermediate">Intermediate</option>
@@ -163,11 +166,11 @@ export default function DashboardContent() {
             </label>
 
             <label className="block space-y-1">
-              <span className="text-slate-300">Goal event</span>
+              <span className="text-xs text-white/80">Goal event</span>
               <select
                 value={goal}
                 onChange={(e) => setGoal(e.target.value as Goal)}
-                className="w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-sm text-slate-100"
+                className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60"
               >
                 <option value="5k">5K</option>
                 <option value="10k">10K</option>
@@ -175,67 +178,70 @@ export default function DashboardContent() {
                 <option value="marathon">Marathon</option>
               </select>
             </label>
-
-            <button
-              type="submit"
-              className="mt-2 w-full rounded-md bg-blue-500 px-3 py-2 text-sm font-medium text-white hover:bg-blue-600"
-            >
-              Generate training plan
-            </button>
-
-            {planMessage && (
-              <p className="mt-2 text-xs text-slate-300 whitespace-pre-wrap">
-                {planMessage}
-              </p>
-            )}
           </div>
+
+          <button
+            type="submit"
+            className="mt-2 w-full rounded-lg bg-blue-500 py-2 text-sm font-medium text-white transition hover:bg-blue-400"
+          >
+            Generate training plan
+          </button>
+
+          {planMessage && (
+            <div className="mt-3 max-h-52 overflow-y-auto rounded-lg bg-black/30 p-3 text-xs text-white/80">
+              {planMessage}
+            </div>
+          )}
         </form>
 
-        <section
-          id="coach"
-          className="flex h-64 flex-col rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-300"
-        >
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-            AI Coach (Gemini)
-          </p>
+        <section className="flex flex-col rounded-2xl border border-white/10 bg-white/5 p-5 text-sm shadow-lg backdrop-blur-md">
+          <header className="mb-2 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-white">AI Coach</h2>
+            <span className="text-[10px] uppercase tracking-[0.16em] text-white/50">
+              Powered by Gemini
+            </span>
+          </header>
 
           <div className="flex-1 space-y-2 overflow-y-auto pr-1 text-sm">
             {chatMessages.length === 0 && (
-              <p className="text-slate-400">
-                Ask anything about training. For example: “Build me an 8‑week
-                10K plan for an intermediate runner.”
+              <p className="text-xs text-white/60">
+                Ask the coach anything about training. For example: “Build me an
+                8‑week 10K plan for an intermediate runner.”
               </p>
             )}
             {chatMessages.map((m, i) => (
               <div
                 key={i}
-                className="rounded-md bg-slate-800 px-3 py-2 text-xs sm:text-sm"
+                className="rounded-lg bg-black/40 px-3 py-2 text-xs text-white/90"
               >
                 {m}
               </div>
             ))}
             {chatLoading && (
-              <p className="text-xs text-slate-500">Coach is thinking…</p>
+              <p className="text-xs text-white/50">Coach is thinking…</p>
             )}
           </div>
 
-          <form className="mt-3 flex gap-2" onSubmit={handleChatSubmit}>
+          <form
+            className="mt-3 flex flex-col gap-2 sm:flex-row"
+            onSubmit={handleChatSubmit}
+          >
             <input
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
-              className="flex-1 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-slate-100 placeholder:text-slate-500 sm:text-sm"
+              className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-xs text-white placeholder:text-white/40 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60 sm:text-sm"
               placeholder="Ask the coach about your training…"
             />
             <button
               type="submit"
-              className="rounded-md bg-blue-500 px-3 py-2 text-xs font-medium text-white hover:bg-blue-600 disabled:opacity-50"
               disabled={chatLoading}
+              className="rounded-lg bg-blue-500 px-4 py-2 text-xs font-medium text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Send
             </button>
           </form>
         </section>
       </section>
-    </div>
+    </main>
   );
 }

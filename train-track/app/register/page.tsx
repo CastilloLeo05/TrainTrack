@@ -1,3 +1,4 @@
+// app/register/page.tsx
 "use client";
 
 import { FormEvent, useState } from "react";
@@ -39,8 +40,6 @@ export default function RegisterPage() {
         }
       );
 
-      console.log(username);
-
       const data = await res.json();
 
       if (res.ok && data.success) {
@@ -57,54 +56,61 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-[calc(100vh-56px)] items-center justify-center">
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-black/40 p-6 shadow-md backdrop-blur-md">
-        <h1 className="mb-1 text-xl font-extrabold tracking-tight">
-          TrainTrack
-        </h1>
-        <p className="mb-6 text-xs text-text/70">
-          Create an account to save your training data.
-        </p>
+    <main className="flex min-h-screen items-center justify-center px-4">
+      <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/10 bg-white/5 p-8 shadow-xl backdrop-blur-md">
+        <header className="space-y-1 text-center">
+          <p className="text-xs uppercase tracking-[0.2em] text-blue-400">
+            TrainTrack
+          </p>
+          <h1 className="text-2xl font-semibold">Create your account</h1>
+          <p className="text-xs text-white/60">
+            Save your training data and AI plans.
+          </p>
+        </header>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-sm">
           <div className="space-y-1">
-            <label className="text-xs font-medium text-text/80">Username</label>
+            <label className="text-xs font-medium text-white/80">
+              Username
+            </label>
             <input
               type="text"
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60"
               placeholder="yourusername"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-text/80">Email</label>
+            <label className="text-xs font-medium text-white/80">Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60"
               placeholder="you@example.com"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-text/80">Password</label>
+            <label className="text-xs font-medium text-white/80">
+              Password
+            </label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60"
               placeholder="••••••••"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-medium text-text/80">
+            <label className="text-xs font-medium text-white/80">
               Confirm password
             </label>
             <input
@@ -112,28 +118,36 @@ export default function RegisterPage() {
               required
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-background/80 px-3 py-2 text-sm text-text placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/60"
               placeholder="••••••••"
             />
           </div>
 
-          {error && <p className="text-xs text-red-400">{error}</p>}
-          {success && <p className="text-xs text-emerald-400">{success}</p>}
+          {error && (
+            <p className="text-xs text-red-400" role="alert">
+              {error}
+            </p>
+          )}
+          {success && (
+            <p className="text-xs text-emerald-400" role="status">
+              {success}
+            </p>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full rounded-md bg-primary px-3 py-2 text-sm font-medium text-white hover:bg-secondary disabled:opacity-60"
+            className="mt-2 w-full rounded-lg bg-blue-500 py-2 text-sm font-medium text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Creating account…" : "Sign up"}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-xs text-text/70">
+        <p className="pt-2 text-center text-xs text-white/60">
           Already have an account?{" "}
           <a
             href="/login"
-            className="font-medium text-secondary hover:underline"
+            className="font-medium text-blue-400 hover:text-blue-300"
           >
             Sign in
           </a>
